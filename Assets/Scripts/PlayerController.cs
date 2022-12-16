@@ -38,7 +38,8 @@ public class PlayerController : MonoBehaviour
                 ReloadLevel();
             }
         }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             QuitGame();
         }
