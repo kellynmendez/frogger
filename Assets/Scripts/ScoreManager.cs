@@ -18,7 +18,9 @@ public class ScoreManager : MonoBehaviour
         _uiController.ChangeScore(_score);
     }
 
-    public void LadyFrogReachedEnd()
+    public void LadyFrogReachedEnd(EndCollider endCol)
     {
+        _uiController.LadyFrogReachedEndPopUp(endCol);
+    }
 
 }

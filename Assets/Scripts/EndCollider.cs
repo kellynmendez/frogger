@@ -1,16 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class EndCollider : MonoBehaviour
 {
     [SerializeField] int _homeScoreIncr = 50;
+    [SerializeField] TMP_Text _endText;
     private ScoreManager _scoreManager;
     private bool _entered = false;
 
     private void Awake()
     {
         _scoreManager = FindObjectOfType<ScoreManager>();
+        _endText.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -21,6 +24,10 @@ public class EndCollider : MonoBehaviour
         {
             pc.UnparentFrog();
             StartCoroutine(PlayerReachedEnd(ph));
+            if (ph.GetIfLadyFrog())
+            {
+                ph.StartBonusLadyFrogUI(this);
+            }
         }
     }
 
@@ -36,5 +43,10 @@ public class EndCollider : MonoBehaviour
         yield return new WaitForSeconds(1f);
         ph.ReachedEnd();
         _entered = true;
-    }    
+    }
+
+    public TMP_Text GetEndText()
+    {
+        return _endText;
+    }
 }

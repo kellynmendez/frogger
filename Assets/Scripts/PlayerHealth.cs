@@ -204,4 +204,21 @@ public class PlayerHealth : MonoBehaviour
             Destroy(lf);
         }
     }
+
+    public bool GetIfLadyFrog()
+    {
+        if (_ladyFrog != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void StartBonusLadyFrogUI(EndCollider endCol)
+    {
+        _scoreManager.LadyFrogReachedEnd(endCol);
+    }
 }

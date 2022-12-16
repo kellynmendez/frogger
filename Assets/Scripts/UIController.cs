@@ -26,8 +26,16 @@ public class UIController : MonoBehaviour
         _scoreText.text = score.ToString();
     }
 
-    public void LadyFrogReachedEndPopUp()
+    public void LadyFrogReachedEndPopUp(EndCollider endCol)
     {
+        TMP_Text endTxt = endCol.GetEndText();
+        StartCoroutine(ShowBonusPopup(endTxt));
+    }
 
+    private IEnumerator ShowBonusPopup(TMP_Text endTxt)
+    {
+        endTxt.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        endTxt.gameObject.SetActive(false);
     }
 }

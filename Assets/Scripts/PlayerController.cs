@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _posYBounds = 15;
     [SerializeField] float _movementDuration = 0.03f;
 
+    private bool _pause;
+
     private PlayerHealth _playerHealth;
 
     private void Awake()
@@ -20,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         // Get input if not responding
-        if (!_playerHealth.GetIfRespawning() && !_playerHealth.GetIfLost())
+        if (!_playerHealth.GetIfRespawning() && !_playerHealth.GetIfLost() && !_pause)
         {
             CheckForInput();
         }
@@ -31,6 +33,15 @@ public class PlayerController : MonoBehaviour
                 ReloadLevel();
             }
         }
+    }
+
+    public void Pause()
+    {
+        _pause = true;
+    }
+    public void Unpause()
+    {
+        _pause = false;
     }
 
     private void CheckForInput()

@@ -61,7 +61,6 @@ public class LadyFrog : MonoBehaviour
     public void ReachedEnd()
     {
         _scoreManager.IncreaseScore(_ladyFrogScoreIncr);
-        _scoreManager.LadyFrogReachedEnd();
     }
 
     private IEnumerator LerpPosition(Transform target, Vector3 from, Vector3 to, float duration)
