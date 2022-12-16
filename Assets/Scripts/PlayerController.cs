@@ -11,12 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _movementDuration = 0.03f;
 
     private PlayerHealth _playerHealth;
-    private Rigidbody _rb;
 
     private void Awake()
     {
         _playerHealth = GetComponent<PlayerHealth>();
-        _rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -52,13 +50,13 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             Vector3 newPos = transform.position;
-            newPos.x = (int)(System.Math.Round(transform.position.x, MidpointRounding.AwayFromZero) + 1);
+            newPos.x = transform.position.x + 1;
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, false));
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             Vector3 newPos = transform.position;
-            newPos.x = (int)(System.Math.Round(transform.position.x, MidpointRounding.AwayFromZero) - 1);
+            newPos.x = transform.position.x - 1;
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, false));
         }
     }
@@ -69,6 +67,16 @@ public class PlayerController : MonoBehaviour
         int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
         Time.timeScale = 1;
         SceneManager.LoadScene(activeSceneIndex);
+    }
+
+    public void SetPlatformAsParent(Transform parent)
+    {
+        transform.SetParent(parent);
+    }
+
+    public void UnparentFrog()
+    {
+        transform.SetParent(null);
     }
 
     private IEnumerator LerpPosition(Transform target, Vector3 from, Vector3 to, float duration, bool forwardBackward)
@@ -88,11 +96,6 @@ public class PlayerController : MonoBehaviour
 
         // final value
         target.position = to;
-
-        if (forwardBackward)
-        {
-            _rb.velocity = new Vector3(0, 0, 0);
-        }
 
         yield break;
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarPool : MonoBehaviour
+public class LilyPadPool : MonoBehaviour
 {
     // game object pool will hold
     [SerializeField] GameObject _poolObject;
@@ -11,13 +11,11 @@ public class CarPool : MonoBehaviour
     // speed
     [SerializeField] float _speed = 5f;
     // timer interval
-    [SerializeField] float _timerIntervalLow = 2f;
-    // timer interval
-    [SerializeField] float _timerIntervalHigh = 5f;
+    [SerializeField] float _timerInterval = 5f;
     // timer interval
     [SerializeField] float _startDelay = 0f;
-    // moving right
-    [SerializeField] bool _movingRight = true;
+    // target
+    [SerializeField] Transform _targetPosition;
     // list of game objects to start with
     List<GameObject> _gameObjects = new List<GameObject>();
 
@@ -47,13 +45,14 @@ public class CarPool : MonoBehaviour
 
         if (_timer >= _timeBenchMark)
         {
-            GameObject carGO = GetPooledObject(transform.position, Quaternion.identity);
-            if (carGO)
+            GameObject lilypadGO = GetPooledObject(transform.position, Quaternion.identity);
+            if (lilypadGO)
             {
-                Car car = carGO.GetComponentInChildren<Car>();
-                car.SetSpeedAndDirection(_speed, _movingRight);
+                LilyPad lilyPad = lilypadGO.GetComponent<LilyPad>();
+                lilyPad.SetSpeedAndTarget(_speed, _targetPosition.position);
+                lilyPad.ActivateArtAndCollider();
             }
-            _timeBenchMark += Random.Range(_timerIntervalLow, _timerIntervalHigh);
+            _timeBenchMark += _timerInterval;
         }
     }
 

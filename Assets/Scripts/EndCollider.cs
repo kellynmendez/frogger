@@ -16,8 +16,10 @@ public class EndCollider : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         PlayerHealth ph = other.GetComponent<PlayerHealth>();
-        if (ph)
+        PlayerController pc = other.GetComponent<PlayerController>();
+        if (ph && pc)
         {
+            pc.UnparentFrog();
             StartCoroutine(PlayerReachedEnd(ph));
         }
     }
@@ -30,8 +32,9 @@ public class EndCollider : MonoBehaviour
     private IEnumerator PlayerReachedEnd(PlayerHealth ph)
     {
         _scoreManager.IncreaseScore(_homeScoreIncr);
+        ph.SetRespawning(true);
         yield return new WaitForSeconds(1f);
-        _entered = true;
         ph.ReachedEnd();
+        _entered = true;
     }    
 }

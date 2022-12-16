@@ -25,4 +25,9 @@ public class UIController : MonoBehaviour
     {
         _scoreText.text = score.ToString();
     }
+
+    public void LadyFrogReachedEndPopUp()
+    {
+
+    }
 }

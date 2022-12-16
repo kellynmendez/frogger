@@ -17,4 +17,8 @@ public class ScoreManager : MonoBehaviour
         _score += incr;
         _uiController.ChangeScore(_score);
     }
+
+    public void LadyFrogReachedEnd()
+    {
+
 }

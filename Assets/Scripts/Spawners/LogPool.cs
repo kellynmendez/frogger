@@ -4,21 +4,28 @@ using UnityEngine;
 
 public class LogPool : MonoBehaviour
 {
+    // lady frog
+    [SerializeField] GameObject _ladyFrogPrefab;
     // game object pool will hold
     [SerializeField] GameObject _poolObject;
     // number of objects to start with
     [SerializeField] int _poolSize = 5;
     // speed
     [SerializeField] float _speed = 5f;
+    // target
+    [SerializeField] Transform _targetPosition;
     // timer interval
     [SerializeField] float _timerInterval = 5f;
     // timer interval
     [SerializeField] float _startDelay = 0f;
+    // log interval until instantiating lady frog on log
+    [SerializeField] int _logCount = 8;
     // list of game objects to start with
     List<GameObject> _gameObjects = new List<GameObject>();
 
     private float _timer = 0;
     private float _timeBenchMark;
+    private int _logTracker = 0;
 
     private void Awake()
     {
@@ -47,7 +54,18 @@ public class LogPool : MonoBehaviour
             if (logGO)
             {
                 Log log = logGO.GetComponent<Log>();
-                log.SetSpeed(_speed);
+                log.SetSpeedAndTarget(_speed, _targetPosition.position);
+
+                if (_logTracker < _logCount)
+                {
+                    _logTracker++;
+                }
+                else
+                {
+                    _logTracker = 0;
+                    GameObject ladyFrog = Instantiate(_ladyFrogPrefab);
+                    log.GiveOutLadyFrog(ladyFrog);
+                }
             }
             _timeBenchMark += _timerInterval;
         }

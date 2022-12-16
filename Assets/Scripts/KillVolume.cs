@@ -18,7 +18,7 @@ public class KillVolume : MonoBehaviour
         if (playerHealth != null && !_playerHealth.GetIfRespawning())
         {
             playerHealth.Kill();
-            Debug.Log("killed from volume");
+            Debug.Log($"killed from volume {gameObject.name}");
         }
     }
 }
