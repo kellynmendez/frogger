@@ -12,9 +12,15 @@ public class BeginningLoader : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 1;
         _timer = FindObjectOfType<Timer>();
         _playerController = FindObjectOfType<PlayerController>();
         StartCoroutine(Loader());
+
+        for (int i = 0; i < _frogs.Length; i++)
+        {
+            _frogs[i].GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+        }
     }
 
     private IEnumerator Loader()
