@@ -31,7 +31,7 @@ public class BeginningLoader : MonoBehaviour
             {
                 Vector2 from = rectTrans.anchoredPosition;
                 Vector2 to = new Vector2(rectTrans.anchoredPosition.x - 95, rectTrans.anchoredPosition.y);
-                float duration = 0.2f;
+                float duration = 0.1f;
 
                 rectTrans.anchoredPosition = from;
 
@@ -44,7 +44,7 @@ public class BeginningLoader : MonoBehaviour
                     yield return null;
                 }
 
-                yield return new WaitForSeconds(0.15f);
+                yield return new WaitForSeconds(0.1f);
 
                 rectTrans.anchoredPosition = to;
                 yield return null;

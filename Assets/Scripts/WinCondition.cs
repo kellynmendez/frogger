@@ -6,6 +6,17 @@ public class WinCondition : MonoBehaviour
 {
     [SerializeField] EndCollider[] _endColliders;
 
+    [Header("Feedback")]
+    [SerializeField] AudioClip _winSFX = null;
+    [SerializeField] AudioSource _audioSource;
+
+    private UIController _uiController;
+
+    private void Awake()
+    {
+        _uiController = FindObjectOfType<UIController>();
+    }
+
     private void Update()
     {
         CheckIfFilled();
@@ -21,8 +32,17 @@ public class WinCondition : MonoBehaviour
 
         if (filled)
         {
-            Debug.Log("WIN");
-            Time.timeScale = 0;
+            StartCoroutine(StartWinSequence());
         }
+    }
+
+    private IEnumerator StartWinSequence()
+    {
+        FindObjectOfType<PlayerHealth>().SetIfGameOver(true);
+        Time.timeScale = 0;
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        _uiController.ShowWinScreen();
     }
 }

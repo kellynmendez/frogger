@@ -10,9 +10,8 @@ public class Firefly : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        PlayerHealth ph = other.GetComponent<PlayerHealth>();
         ScoreManager sm = other.GetComponent<ScoreManager>();
-        if (ph && !ph.GetIfRespawning() && sm)
+        if (other.tag == "Player")
         {
             sm.IncreaseScore(_fireflyScoreIncr);
             _visualsToDeactivate.SetActive(false);
@@ -25,4 +24,5 @@ public class Firefly : MonoBehaviour
         _visualsToDeactivate.SetActive(true);
         _colliderToDeactivate.enabled = true;
     }
+
 }

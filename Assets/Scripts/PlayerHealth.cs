@@ -8,6 +8,10 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] GameObject _playerClonePrefab;
     [SerializeField] Material _frogBody;
     [SerializeField] Material _frogParts;
+    [Header("Feedback")]
+    [SerializeField] AudioClip _deathSFX = null;
+    [SerializeField] AudioClip _loseSFX = null;
+    private AudioSource _audioSource;
 
     private bool _respawning = false;
     private bool _gameOver = false;
@@ -25,6 +29,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _ogBodyColor = _frogBody.color;
         _ogPartsColor = _frogParts.color;
         _startPosition = transform.position;
@@ -38,6 +43,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Kill()
     {
+        PlayDeathSFX();
         // Setting respawn flag
         _respawning = true;
         // Decrementing number of lives
@@ -76,14 +82,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Lose()
     {
-        Debug.Log("lost");
-        _gameOver = true;
-        Time.timeScale = 0;
-    }
-
-    private void Win()
-    {
-
+        StartCoroutine(StartLoseSequence());
     }
 
     public bool GetIfRespawning()
@@ -91,9 +90,14 @@ public class PlayerHealth : MonoBehaviour
         return _respawning;
     }
 
-    public bool GetIfLost()
+    public bool GetIfGameOver()
     {
         return _gameOver;
+    }
+
+    public void SetIfGameOver(bool ga)
+    {
+         _gameOver = ga;
     }
 
     private IEnumerator KillSequence(bool lost)
@@ -153,11 +157,17 @@ public class PlayerHealth : MonoBehaviour
     {
         _playerController.UnparentFrog();
 
+        // Freeze constraints
+        _rbToFreeze.constraints = RigidbodyConstraints.FreezePosition;
+        _rbToFreeze.velocity = Vector3.zero;
+        _rbToFreeze.useGravity = false;
+        _colliderToDeactivate.enabled = false;
+
         // Deactivating visuals
-        transform.rotation = Quaternion.identity;
         _visualsToDeactivate.SetActive(false);
         Vector3 clonePos = transform.position;
         transform.position = _startPosition;
+        transform.rotation = Quaternion.identity;
         // Creating clone
         GameObject clone = Instantiate(_playerClonePrefab);
         clone.transform.position = clonePos;
@@ -165,6 +175,7 @@ public class PlayerHealth : MonoBehaviour
         // Respawning
         yield return new WaitForSeconds(1f);
         _visualsToDeactivate.SetActive(true);
+        _colliderToDeactivate.enabled = true;
         _rbToFreeze.constraints = RigidbodyConstraints.FreezeRotation;
 
         // Reset timer
@@ -220,5 +231,32 @@ public class PlayerHealth : MonoBehaviour
     public void StartBonusLadyFrogUI(EndCollider endCol)
     {
         _scoreManager.LadyFrogReachedEnd(endCol);
+    }
+
+    private IEnumerator StartLoseSequence()
+    {
+        _gameOver = true;
+        Time.timeScale = 0;
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        _uiController.ShowLoseScreen();
+        PlayLoseSFX();
+    }
+
+    private void PlayDeathSFX()
+    {
+        if (_audioSource != null && _deathSFX != null)
+        {
+            _audioSource.PlayOneShot(_deathSFX, _audioSource.volume);
+        }
+    }
+
+    private void PlayLoseSFX()
+    {
+        if (_audioSource != null && _loseSFX != null)
+        {
+            _audioSource.PlayOneShot(_loseSFX, _audioSource.volume);
+        }
     }
 }

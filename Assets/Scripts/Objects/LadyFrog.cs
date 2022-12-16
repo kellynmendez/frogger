@@ -9,6 +9,9 @@ public class LadyFrog : MonoBehaviour
     [SerializeField] int _ladyFrogScoreIncr = 200;
     [SerializeField] float _leapInterval = 2f;
     [SerializeField] float _leapDuration = 0.1f;
+    [Header("Feedback")]
+    [SerializeField] AudioClip _ladyFrogSFX = null;
+    private AudioSource _audioSource;
 
     private float _timeValue;
     ScoreManager _scoreManager;
@@ -17,6 +20,7 @@ public class LadyFrog : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _scoreManager = FindObjectOfType<ScoreManager>();
         _timeValue = _leapInterval;
     }
@@ -52,6 +56,7 @@ public class LadyFrog : MonoBehaviour
         PlayerHealth ph = other.GetComponent<PlayerHealth>();
         if (ph && !ph.GetIfRespawning())
         {
+            PlayLadyFrogSFX();
             _caught = true;
             transform.SetParent(ph.transform);
             ph.SetLadyFrog(gameObject);
@@ -82,5 +87,13 @@ public class LadyFrog : MonoBehaviour
         target.position = to;
 
         yield break;
+    }
+
+    private void PlayLadyFrogSFX()
+    {
+        if (_audioSource != null && _ladyFrogSFX != null)
+        {
+            _audioSource.PlayOneShot(_ladyFrogSFX, _audioSource.volume);
+        }
     }
 }

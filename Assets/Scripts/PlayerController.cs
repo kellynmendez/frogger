@@ -10,28 +10,37 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float _posYBounds = 15;
     [SerializeField] float _movementDuration = 0.03f;
 
+    [Header("Feedback")]
+    [SerializeField] AudioClip _leapSFX = null;
+    private AudioSource _audioSource;
+
     private bool _pause;
 
     private PlayerHealth _playerHealth;
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _playerHealth = GetComponent<PlayerHealth>();
     }
 
     private void Update()
     {
         // Get input if not responding
-        if (!_playerHealth.GetIfRespawning() && !_playerHealth.GetIfLost() && !_pause)
+        if (!_playerHealth.GetIfRespawning() && !_playerHealth.GetIfGameOver() && !_pause)
         {
             CheckForInput();
         }
-        else if (_playerHealth.GetIfLost())
+        else if (_playerHealth.GetIfGameOver())
         {
             if (Input.GetKeyDown(KeyCode.Backspace))
             {
                 ReloadLevel();
             }
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitGame();
         }
     }
 
@@ -48,24 +57,28 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.UpArrow) && (transform.position + Vector3.forward).z <= _posYBounds)
         {
+            PlayLeapSFX();
             Vector3 newPos = transform.position;
             newPos.z = (int)(System.Math.Round(transform.position.z, MidpointRounding.AwayFromZero) + 1);
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, true));
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow) && (transform.position + Vector3.back).z >= _negYBounds)
         {
+            PlayLeapSFX();
             Vector3 newPos = transform.position;
             newPos.z = (int)(System.Math.Round(transform.position.z, MidpointRounding.AwayFromZero) - 1);
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, true));
         }
         else if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            PlayLeapSFX();
             Vector3 newPos = transform.position;
             newPos.x = transform.position.x + 1;
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, false));
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
+            PlayLeapSFX();
             Vector3 newPos = transform.position;
             newPos.x = transform.position.x - 1;
             StartCoroutine(LerpPosition(transform, transform.position, newPos, _movementDuration, false));
@@ -109,5 +122,15 @@ public class PlayerController : MonoBehaviour
         target.position = to;
 
         yield break;
+    }
+
+    private void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    private void PlayLeapSFX()
+    {
+        _audioSource.PlayOneShot(_leapSFX, _audioSource.volume);
     }
 }
